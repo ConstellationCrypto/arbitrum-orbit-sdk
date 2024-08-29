@@ -59,7 +59,7 @@ You need to set the following environment variables in an .env file:
 Beware: At least one of the signers needs to be an EOA account so that it can propose transactions through this script.
 
 1. Build this example: tsc --outDir dist 
-2. OWNER_1_ADDRESS_PRIVATE_KEY= PARENT_CHAIN_ID=11155111 SAFE_ADDRESS=0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0 FC_VALIDATORS='["0xf9219Acf7A94e5069c8fE71f75eE9186957e7E90"]' node ./dist/1-create_multisig.js
+2. OWNER_1_ADDRESS_PRIVATE_KEY= PARENT_CHAIN_ID=11155111 SAFE_ADDRESS=0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0 FC_VALIDATORS='["0x0b791F0b3c009F8c8C6030Fb76b8A5b65f23Fb92"]' node ./dist/1-create_multisig.js
 This step will create a new Safe on the parent chain and add fast confirmation validators as owners.
 
 If you want to use this script then you need to make sure the owner of the Rollup has been transfered to a Multisig:
@@ -68,10 +68,10 @@ Constellation-Monorepo/scripts/nitro$ npx ts-node src/owner.ts l1 grant --upgrad
 Granting L1 ownership with 0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0
 Ownership granted to 0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0
 
-3.  OWNER_1_ADDRESS_PRIVATE_KEY= PARENT_CHAIN_ID=11155111 SAFE_ADDRESS=0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0 FC_VALIDATORS_SAFE_ADDRESS=0xBE17DBcCBaC59208D3130e05f1FECAFC1c1d59e0 FC_VALIDATORS='["0xf9219Acf7A94e5069c8fE71f75eE9186957e7E90"]' ROLLUP_ADDRESS=0x81299ecC057194Bec6d403a110a2C74a8A07A3bF RPC=https://eth-sepolia.g.alchemy.com/v2/fpQPC7q22cy7i2rILZBCiibBXQkjpwJO node ./dist/2-add_validators.js
+3.  OWNER_1_ADDRESS_PRIVATE_KEY= PARENT_CHAIN_ID=11155111 SAFE_ADDRESS=0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0 FC_VALIDATORS_SAFE_ADDRESS=0xCA1dF7C96c3c2Ecd58Cd65d0b8e4B1dBCA7aDa25 FC_VALIDATORS='["0x0b791f0b3c009f8c8c6030fb76b8a5b65f23fb92"]' ROLLUP_ADDRESS=0x81299ecC057194Bec6d403a110a2C74a8A07A3bF RPC=https://eth-sepolia.g.alchemy.com/v2/fpQPC7q22cy7i2rILZBCiibBXQkjpwJO node ./dist/2-add_validators.js
 the validators list is expanded with the Safe created with step 1 (1-create_multisig). That's why you need to provide FC_VALIDATORS_SAFE_ADDRESS. 
 
-4. OWNER_1_ADDRESS_PRIVATE_KEY= PARENT_CHAIN_ID=11155111 SAFE_ADDRESS=0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0 FC_VALIDATORS_SAFE_ADDRESS=0xBE17DBcCBaC59208D3130e05f1FECAFC1c1d59e0 ROLLUP_ADDRESS=0x81299ecC057194Bec6d403a110a2C74a8A07A3bF RPC=https://eth-sepolia.g.alchemy.com/v2/fpQPC7q22cy7i2rILZBCiibBXQkjpwJO node ./dist/3-set-any-trust-fast-confirmer.js
+4. OWNER_1_ADDRESS_PRIVATE_KEY= PARENT_CHAIN_ID=11155111 SAFE_ADDRESS=0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0 FC_VALIDATORS_SAFE_ADDRESS=0xCA1dF7C96c3c2Ecd58Cd65d0b8e4B1dBCA7aDa25 ROLLUP_ADDRESS=0x81299ecC057194Bec6d403a110a2C74a8A07A3bF RPC=https://eth-sepolia.g.alchemy.com/v2/fpQPC7q22cy7i2rILZBCiibBXQkjpwJO node ./dist/3-set-any-trust-fast-confirmer.js
 We also add this Safe as `fast confirmer`.
 
-5. OWNER_1_ADDRESS_PRIVATE_KEY= PARENT_CHAIN_ID=11155111 SAFE_ADDRESS=0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0 MINIMUM_ASSERTION_PERIOD=25 ROLLUP_ADDRESS=0x81299ecC057194Bec6d403a110a2C74a8A07A3bF RPC=https://eth-sepolia.g.alchemy.com/v2/fpQPC7q22cy7i2rILZBCiibBXQkjpwJO node ./dist/4-configure-minimum-assertion-period.js
+5. OWNER_1_ADDRESS_PRIVATE_KEY= PARENT_CHAIN_ID=11155111 SAFE_ADDRESS=0x5c9441C544bb60A5e560Aef68E134d62eED6e8c0 MINIMUM_ASSERTION_PERIOD=1 ROLLUP_ADDRESS=0x81299ecC057194Bec6d403a110a2C74a8A07A3bF RPC=https://eth-sepolia.g.alchemy.com/v2/fpQPC7q22cy7i2rILZBCiibBXQkjpwJO node ./dist/4-configure-minimum-assertion-period.js

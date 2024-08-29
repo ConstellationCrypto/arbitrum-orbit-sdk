@@ -14,6 +14,7 @@ import {
   MetaTransactionData,
   OperationType
 } from '@safe-global/safe-core-sdk-types'
+import { propose } from './common.js';
 
 
 config();
@@ -114,37 +115,7 @@ async function main() {
         upgradeExecutor: upgradeExecutorAddress,
         account: rollupOwnerSafeAddress,
       });
-
-    const safeTransactionData: MetaTransactionData = {
-      to: setMinimumAssertionPeriodTransactionRequest.to as `0x${string}`,
-      value: '0',
-      data: setMinimumAssertionPeriodTransactionRequest.data as `0x${string}`,
-      operation: OperationType.Call
-    }
-    const protocolKitOwner1 = await Safe.default.init({
-      provider: parentChainPublicClient.transport,
-      signer: process.env.OWNER_1_ADDRESS_PRIVATE_KEY as `${string}`,
-      safeAddress: process.env.SAFE_ADDRESS as `0x${string}`,
-    })
-    const safeTransaction = await protocolKitOwner1.createTransaction({
-      transactions: [safeTransactionData]
-    })
-    // // Propose transaction to the service
-    const chainId = BigInt(String(process.env.PARENT_CHAIN_ID));
-    const apiKit = new SafeApiKit.default({
-      chainId: chainId, // set the correct chainId
-    })
-    const safeTxHash = await protocolKitOwner1.getTransactionHash(safeTransaction)
-    const signature = await protocolKitOwner1.signHash(safeTxHash)
-    const senderAddress = privateKeyToAccount(sanitizePrivateKey(process.env.OWNER_1_ADDRESS_PRIVATE_KEY as `${string}`));
-    await apiKit.proposeTransaction({
-      safeAddress: process.env.SAFE_ADDRESS as `0x${string}`,
-      safeTransactionData: safeTransaction.data,
-      safeTxHash,
-      senderAddress: senderAddress.address,
-      senderSignature: signature.data
-    })
-
+    propose(setMinimumAssertionPeriodTransactionRequest.to as string, setMinimumAssertionPeriodTransactionRequest.data as string, rollupOwnerSafeAddress);
     console.log('Transaction proposed');
   } else {
     console.log(

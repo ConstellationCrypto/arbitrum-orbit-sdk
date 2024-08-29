@@ -13,6 +13,7 @@ import {
   MetaTransactionData,
   OperationType
 } from '@safe-global/safe-core-sdk-types'
+import { propose } from './common.js';
 
 
 config();
@@ -117,37 +118,7 @@ async function main() {
       upgradeExecutor: upgradeExecutorAddress,
       account: rollupOwnerSafeAddress,
     });
-
-  const safeTransactionData: MetaTransactionData = {
-    to: setValidatorTransactionRequest.to as `0x${string}`,
-    value: '0',
-    data: setValidatorTransactionRequest.data as `0x${string}`,
-    operation: OperationType.Call
-  }
-  const protocolKitOwner1 = await Safe.default.init({
-    provider: parentChainPublicClient.transport,
-    signer: process.env.OWNER_1_ADDRESS_PRIVATE_KEY as `${string}`,
-    safeAddress: rollupOwnerSafeAddress,
-  })
-  const safeTransaction = await protocolKitOwner1.createTransaction({
-    transactions: [safeTransactionData]
-  })
-  // // Propose transaction to the service
-  const chainId = BigInt(String(process.env.PARENT_CHAIN_ID));
-  const apiKit = new SafeApiKit.default({
-    chainId: chainId, // set the correct chainId
-  })
-  const safeTxHash = await protocolKitOwner1.getTransactionHash(safeTransaction)
-  const signature = await protocolKitOwner1.signHash(safeTxHash)
-  const senderAddress = privateKeyToAccount(sanitizePrivateKey(process.env.OWNER_1_ADDRESS_PRIVATE_KEY as `${string}`));
-  await apiKit.proposeTransaction({
-    safeAddress: rollupOwnerSafeAddress,
-    safeTransactionData: safeTransaction.data,
-    safeTxHash,
-    senderAddress: senderAddress.address,
-    senderSignature: signature.data
-  })
-  console.log('Transaction proposed.')
+  propose(setValidatorTransactionRequest.to as string, setValidatorTransactionRequest.data as string, rollupOwnerSafeAddress);
 }
 
 main();

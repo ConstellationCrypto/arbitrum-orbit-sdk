@@ -11,6 +11,7 @@ import {
   MetaTransactionData,
   OperationType
 } from '@safe-global/safe-core-sdk-types'
+import { propose } from './common.js';
 
 config();
 
@@ -33,16 +34,14 @@ if (typeof process.env.FC_VALIDATORS === 'undefined') {
   throw new Error(`Please provide the "FC_VALIDATORS" environment variable`);
 }
 
-const safeAddress = process.env.SAFE_ADDRESS as `0x${string}`;
+const rollupOwnerSafeAddress = process.env.SAFE_ADDRESS as `0x${string}`;
 // // set the parent chain and create a public client for it
 const parentChainId = Number(process.env.PARENT_CHAIN_ID);
 const parentChain = getParentChainFromId(parentChainId);
 const parentChainPublicClient = createPublicClient({
   chain: parentChain,
-  transport: http(),
+  transport: http(process.env.RPC),
 });
-
-
 // sanitize validator addresses
 console.log(process.env.FC_VALIDATORS);
 const fcValidators = JSON.parse(process.env.FC_VALIDATORS);
@@ -75,42 +74,12 @@ async function main() {
   console.log('---');
   const txRequest = await createSafePrepareTransactionRequest({
     publicClient: parentChainPublicClient,
-    account: safeAddress,
+    account: rollupOwnerSafeAddress,
     owners: fcValidators,
     threshold: safeWalletThreshold,
     saltNonce: BigInt(Date.now())
   });
-  const protocolKitOwner1 = await Safe.default.init({
-    provider: parentChainPublicClient.transport,
-    signer: process.env.OWNER_1_ADDRESS_PRIVATE_KEY as `${string}`,
-    safeAddress: process.env.SAFE_ADDRESS as `0x${string}`,
-  })
-  
-  const safeTransactionData: MetaTransactionData = {
-    to: txRequest.to as `0x${string}`,
-    value: '0',
-    data: txRequest.data as `0x${string}`,
-    operation: OperationType.Call
-  }
-  const safeTransaction = await protocolKitOwner1.createTransaction({
-    transactions: [safeTransactionData]
-  })
-  // Propose transaction to the service
-  const chainId = BigInt(String(process.env.PARENT_CHAIN_ID));
-  const apiKit = new SafeApiKit.default({
-    chainId: chainId, // set the correct chainId
-  })
-  const safeTxHash = await protocolKitOwner1.getTransactionHash(safeTransaction)
-  const signature = await protocolKitOwner1.signHash(safeTxHash)
-  const senderAddress = privateKeyToAccount(sanitizePrivateKey(process.env.OWNER_1_ADDRESS_PRIVATE_KEY as `${string}`));
-  console.log('Proposing...')
-  await apiKit.proposeTransaction({
-    safeAddress: process.env.SAFE_ADDRESS as `0x${string}`,
-    safeTransactionData: safeTransaction.data,
-    safeTxHash,
-    senderAddress: senderAddress.address,
-    senderSignature: signature.data
-  })
+  propose(txRequest.to as string, txRequest.data as string, rollupOwnerSafeAddress);
   //execute the transaction
   //https://help.safe.global/en/articles/40834-verify-safe-creation
   //in the executed transaction find `ProxyCreation` event
