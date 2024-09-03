@@ -5,15 +5,8 @@ import {
   rollupAdminLogicPublicActions,
 } from '@arbitrum/orbit-sdk';
 import { base, baseSepolia } from '@arbitrum/orbit-sdk/chains';
-import { getParentChainFromId, sanitizePrivateKey } from '@arbitrum/orbit-sdk/utils';
+import { getParentChainFromId } from '@arbitrum/orbit-sdk/utils';
 import { config } from 'dotenv';
-import SafeApiKit from '@safe-global/api-kit'
-import Safe from '@safe-global/protocol-kit'
-import { privateKeyToAccount } from 'viem/accounts';
-import {
-  MetaTransactionData,
-  OperationType
-} from '@safe-global/safe-core-sdk-types'
 import { propose } from './common.js';
 
 

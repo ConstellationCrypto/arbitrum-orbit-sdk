@@ -1,21 +1,12 @@
 import { createPublicClient, http, isAddress } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
 import {
   createSafePrepareTransactionRequest,
 } from '@arbitrum/orbit-sdk';
-import { getParentChainFromId, sanitizePrivateKey } from '@arbitrum/orbit-sdk/utils';
+import { getParentChainFromId } from '@arbitrum/orbit-sdk/utils';
 import { config } from 'dotenv';
-import SafeApiKit from '@safe-global/api-kit'
-import Safe from '@safe-global/protocol-kit'
-import {
-  MetaTransactionData,
-  OperationType
-} from '@safe-global/safe-core-sdk-types'
 import { propose } from './common.js';
 
 config();
-
-// helper
 
 //check environment variables
 if (typeof process.env.OWNER_1_ADDRESS_PRIVATE_KEY === 'undefined') {
@@ -43,7 +34,6 @@ const parentChainPublicClient = createPublicClient({
   transport: http(process.env.RPC),
 });
 // sanitize validator addresses
-console.log(process.env.FC_VALIDATORS);
 const fcValidators = JSON.parse(process.env.FC_VALIDATORS);
 const safeWalletThreshold = fcValidators.length;
 if (!fcValidators) {

@@ -1,4 +1,4 @@
-import { createPublicClient, http, isAddress, Address } from 'viem';
+import { createPublicClient, http } from 'viem';
 import { getParentChainFromId, sanitizePrivateKey } from '@arbitrum/orbit-sdk/utils';
 import SafeApiKit from '@safe-global/api-kit'
 import Safe from '@safe-global/protocol-kit'
@@ -34,7 +34,7 @@ export async function propose(to: string, data: string, rollupOwnerSafeAddress: 
   const safeTransaction = await protocolKitOwner1.createTransaction({
     transactions: [safeTransactionData]
   })
-  // // Propose transaction to the service
+  // Propose transaction to the service
   const chainId = BigInt(String(process.env.PARENT_CHAIN_ID));
   const apiKit = new SafeApiKit.default({
     chainId: chainId, // set the correct chainId

@@ -1,19 +1,12 @@
-import { createPublicClient, http, isAddress, Address, parseAbi } from 'viem';
+import { createPublicClient, http, Address, parseAbi } from 'viem';
 import {
   createRollupFetchTransactionHash,
   createRollupPrepareTransactionReceipt,
   rollupAdminLogicPublicActions,
   setAnyTrustFastConfirmerPrepareTransactionRequest,
 } from '@arbitrum/orbit-sdk';
-import { getParentChainFromId, sanitizePrivateKey } from '@arbitrum/orbit-sdk/utils';
+import { getParentChainFromId } from '@arbitrum/orbit-sdk/utils';
 import { config } from 'dotenv';
-import SafeApiKit from '@safe-global/api-kit'
-import Safe from '@safe-global/protocol-kit'
-import { privateKeyToAccount } from 'viem/accounts';
-import {
-  MetaTransactionData,
-  OperationType
-} from '@safe-global/safe-core-sdk-types'
 import { propose } from './common.js';
 
 
